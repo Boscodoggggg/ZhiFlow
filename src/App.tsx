@@ -1,9 +1,11 @@
 import * as RadixSwitch from "@radix-ui/react-switch";
 import * as RadixTabs from "@radix-ui/react-tabs";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
+import { SiClaude, SiCursor, SiGooglegemini } from "@icons-pack/react-simple-icons";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Bell,
+  Bot,
   Boxes,
   CheckCircle2,
   CircleAlert,
@@ -27,7 +29,7 @@ import {
   TerminalSquare,
   type LucideIcon,
 } from "lucide-react";
-import { planAgentMode, type AgentProvider } from "./agentModes";
+import { planAgentMode, type AgentProvider, type ProviderId } from "./agentModes";
 import type { Locale, MessageKey } from "./i18n";
 import { createTranslator } from "./i18n";
 import { fetchProjectSnapshot, type ProjectApiSnapshot } from "./projectApi";
@@ -165,6 +167,27 @@ function nextFilter(filter: TaskFilter): TaskFilter {
   if (filter === "all") return "todo";
   if (filter === "todo") return "done";
   return "all";
+}
+
+function ProviderBrandIcon({ providerId, size = 15 }: { providerId: ProviderId; size?: number }) {
+  if (providerId === "claude") return <SiClaude aria-hidden="true" color="currentColor" focusable="false" size={size} title="" />;
+  if (providerId === "gemini") return <SiGooglegemini aria-hidden="true" color="currentColor" focusable="false" size={size} title="" />;
+  if (providerId === "cursor") return <SiCursor aria-hidden="true" color="currentColor" focusable="false" size={size} title="" />;
+  if (providerId === "opencode") return <Code2 aria-hidden="true" size={size} />;
+  return <Bot aria-hidden="true" size={size} />;
+}
+
+function ProviderBadges({ providers }: { providers: AgentProvider[] }) {
+  return (
+    <div className="provider-badges" aria-label="Agent providers">
+      {providers.map((provider) => (
+        <span className={`provider-chip ${provider.available ? "available" : "missing"}`} key={provider.id}>
+          <ProviderBrandIcon providerId={provider.id} />
+          <span>{provider.label}</span>
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function IconTooltipButton({
@@ -365,7 +388,7 @@ export function App() {
       <aside className="sidebar" aria-label="ZhiFlow navigation">
         <div className="brand">
           <div className="brand-mark">
-            <Sparkles size={20} />
+            <img src="/zhiflow-mark.svg" alt="" aria-hidden="true" />
           </div>
           <div>
             <strong>{t("app.title")}</strong>
@@ -507,6 +530,7 @@ export function App() {
                 {t("task.providerMode")}：{modePlan.mode === "unavailable" ? "未检测到执行器" : modePlan.mode}
               </strong>
               <p>{modePlan.recommendation}</p>
+              <ProviderBadges providers={providers} />
             </div>
           </div>
           <div className="mode-meta">
@@ -525,7 +549,7 @@ export function App() {
 
         {notice ? (
           <div className="notice-bar">
-            <Sparkles size={15} />
+            <img className="notice-logo" src="/zhiflow-mark.svg" alt="" aria-hidden="true" />
             <span>{notice}</span>
             <button type="button" aria-label={t("actions.clear")} onClick={() => setNotice(null)}>
               {t("actions.clear")}
@@ -1141,8 +1165,10 @@ function SettingsPanel({
         <strong>{t("settings.providers")}</strong>
         <div className="provider-list">
           {providers.map((provider) => (
-            <div className="provider-row" key={provider.id}>
-              <span className={provider.available ? "dot tone-green" : "dot tone-amber"} />
+            <div className={`provider-row ${provider.available ? "available" : "missing"}`} key={provider.id}>
+              <span className="provider-logo">
+                <ProviderBrandIcon providerId={provider.id} size={16} />
+              </span>
               <span>{provider.label}</span>
               <em>{provider.available ? "available" : "missing"}</em>
             </div>

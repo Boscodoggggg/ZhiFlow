@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="108" height="108" rx="26" fill="#0F172A"/>
+  <rect x="10" y="10" width="108" height="108" rx="26" stroke="url(#frame)" stroke-width="4"/>
+  <path d="M38 44H58C67.941 44 76 52.059 76 62V84" stroke="url(#flow)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M90 44H70C60.059 44 52 52.059 52 62V84" stroke="url(#flow2)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="38" cy="44" r="9" fill="#5B8CFF"/>
+  <circle cx="90" cy="44" r="9" fill="#2DD4BF"/>
+  <circle cx="52" cy="84" r="9" fill="#F59E0B"/>
+  <circle cx="76" cy="84" r="9" fill="#7CCF48"/>
+  <defs>
+    <linearGradient id="frame" x1="18" y1="18" x2="114" y2="113" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="0.52" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="38" y1="44" x2="77" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="1" stop-color="#7CCF48"/>
+    </linearGradient>
+    <linearGradient id="flow2" x1="90" y1="44" x2="51" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+</svg>

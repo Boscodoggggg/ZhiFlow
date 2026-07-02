@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "dev:app": "node server/dev-server.mjs",
@@ -12,6 +15,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^13.13.0",
     "@radix-ui/react-switch": "^1.3.2",
     "@radix-ui/react-tabs": "^1.1.16",
     "@radix-ui/react-tooltip": "^1.2.11",

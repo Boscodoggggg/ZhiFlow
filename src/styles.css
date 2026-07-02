@@ -126,6 +126,13 @@ button {
   border-radius: 8px;
   color: var(--cyan);
   background: rgba(39, 200, 247, 0.1);
+  overflow: hidden;
+}
+
+.brand-mark img {
+  display: block;
+  width: 32px;
+  height: 32px;
 }
 
 .brand strong {
@@ -1103,6 +1110,25 @@ progress::-webkit-progress-value {
   grid-template-columns: 10px 1fr auto;
   align-items: center;
   gap: 8px;
+}
+
+.provider-logo {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+
+.provider-row.available .provider-logo {
+  color: var(--cyan);
+}
+
+.provider-row.missing .provider-logo {
+  color: var(--quiet);
 }
 
 .source-table {
@@ -2652,4 +2678,51 @@ progress::-webkit-progress-value {
 .decision-actions .secondary {
   border-color: color-mix(in srgb, var(--amber) 58%, var(--line));
   background: color-mix(in srgb, var(--amber) 10%, transparent);
+}
+
+.notice-logo {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+}
+
+.provider-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.provider-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.provider-chip.available {
+  border-color: color-mix(in srgb, var(--cyan) 28%, var(--line));
+  color: var(--text);
+}
+
+.provider-chip.missing {
+  opacity: 0.58;
+}
+
+.provider-row {
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+}
+
+.provider-row.available em {
+  color: var(--green);
+}
+
+.provider-row.missing em {
+  color: var(--amber);
 }
