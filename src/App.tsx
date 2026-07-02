@@ -520,153 +520,155 @@ export function App() {
           </div>
         </header>
 
-        <section className="mode-banner">
-          <div>
-            <span className="mode-icon">
-              <Globe2 size={18} />
-            </span>
+        <div className="main-scroll">
+          <section className="mode-banner">
             <div>
-              <strong>
-                {t("task.providerMode")}：{modePlan.mode === "unavailable" ? "未检测到执行器" : modePlan.mode}
-              </strong>
-              <p>{modePlan.recommendation}</p>
-              <ProviderBadges providers={providers} />
-            </div>
-          </div>
-          <div className="mode-meta">
-            <span>
-              {t("task.detected")}：{modePlan.detectedProviders.join(" / ") || "无"}
-            </span>
-            <span>
-              {t("task.trust")}：{modePlan.trustLevel}
-            </span>
-          </div>
-        </section>
-
-        <PipelineRail snapshot={snapshot} providers={providers} completedCount={completedCount} pendingCount={pendingCount} t={t} />
-
-        <SourceStrip snapshot={snapshot} error={error} />
-
-        {notice ? (
-          <div className="notice-bar">
-            <img className="notice-logo" src="/zhiflow-mark.svg" alt="" aria-hidden="true" />
-            <span>{notice}</span>
-            <button type="button" aria-label={t("actions.clear")} onClick={() => setNotice(null)}>
-              {t("actions.clear")}
-            </button>
-          </div>
-        ) : null}
-
-        <div className="workbench">
-          <section className="board-panel">
-            <div className="panel-header">
+              <span className="mode-icon">
+                <Globe2 size={18} />
+              </span>
               <div>
-                <h2>{currentPanelTitle}</h2>
-                <span>{currentPanelSubtitle}</span>
-              </div>
-              <div className="panel-tools">
-                <button type="button" onClick={handleFilterCycle}>
-                  <Search size={14} />
-                  {filterLabel(taskFilter, t)}
-                </button>
-                <button type="button" aria-label={t("actions.openSettings")} onClick={() => handleNavSelect("settings")}>
-                  <Settings size={14} />
-                </button>
+                <strong>
+                  {t("task.providerMode")}：{modePlan.mode === "unavailable" ? "未检测到执行器" : modePlan.mode}
+                </strong>
+                <p>{modePlan.recommendation}</p>
+                <ProviderBadges providers={providers} />
               </div>
             </div>
-
-            {error ? <div className="empty-state error">{error}</div> : null}
-            {!error ? (
-              <WorkbenchBody
-                activeNav={activeNav}
-                activeTab={activeTopTab}
-                snapshot={snapshot}
-                tasks={tasks}
-                filteredTasks={filteredTasks}
-                activeSourceId={activeSourceId}
-                taskFilter={taskFilter}
-                providers={providers}
-                theme={theme}
-                totalProgress={totalProgress}
-                completedCount={completedCount}
-                pendingCount={pendingCount}
-                selectedTaskId={selectedTask?.id ?? null}
-                t={t}
-                onOpenSources={() => handleTopTabSelect("sources")}
-                onOpenTasks={() => handleTopTabSelect("board")}
-                onSelectSource={handleSourceSelect}
-                onSelectTask={setSelectedTaskId}
-                onOpenRun={(taskId) => {
-                  setSelectedTaskId(taskId);
-                  setActiveInspectorTab("run");
-                }}
-                onOpenReview={(taskId) => {
-                  setSelectedTaskId(taskId);
-                  setActiveInspectorTab("review");
-                }}
-                onOpenDecision={() => setActiveInspectorTab("decision")}
-                onToggleTheme={handleThemeToggle}
-                onRefresh={handleRefresh}
-              />
-            ) : null}
+            <div className="mode-meta">
+              <span>
+                {t("task.detected")}：{modePlan.detectedProviders.join(" / ") || "无"}
+              </span>
+              <span>
+                {t("task.trust")}：{modePlan.trustLevel}
+              </span>
+            </div>
           </section>
 
-          <Inspector
-            task={selectedTask}
-            t={t}
-            completedCount={completedCount}
-            pendingCount={pendingCount}
-            activeTab={activeInspectorTab}
-            actionOutput={actionOutput}
-            onTabChange={setActiveInspectorTab}
-            onPreviewWorktree={() => handlePreviewWorktree(selectedTask)}
-            onCreatePr={() => handleCreatePr(selectedTask)}
-          />
-        </div>
+          <PipelineRail snapshot={snapshot} providers={providers} completedCount={completedCount} pendingCount={pendingCount} t={t} />
 
-        <footer className="execution-strip">
-          <div className="status-summary">
-            <strong>{t("footer.status")}</strong>
-            <div>
-              <span>
-                {tasks.length}
-                <small>tasks</small>
-              </span>
-              <span>
-                {completedCount}
-                <small>{t("status.approved")}</small>
-              </span>
-              <span>
-                {pendingCount}
-                <small>待执行</small>
-              </span>
+          <SourceStrip snapshot={snapshot} error={error} />
+
+          {notice ? (
+            <div className="notice-bar">
+              <img className="notice-logo" src="/zhiflow-mark.svg" alt="" aria-hidden="true" />
+              <span>{notice}</span>
+              <button type="button" aria-label={t("actions.clear")} onClick={() => setNotice(null)}>
+                {t("actions.clear")}
+              </button>
             </div>
-            <progress max="100" value={totalProgress} />
-            <small>
-              {t("footer.overall")} {totalProgress}%
-            </small>
-          </div>
-          {(snapshot?.sources ?? []).slice(0, 3).map((source) => (
-            <div className="mini-run tone-cyan" key={source.id}>
-              <div>
-                <strong>{source.label}</strong>
-                <span>{source.root}</span>
+          ) : null}
+
+          <div className="workbench">
+            <section className="board-panel">
+              <div className="panel-header">
+                <div>
+                  <h2>{currentPanelTitle}</h2>
+                  <span>{currentPanelSubtitle}</span>
+                </div>
+                <div className="panel-tools">
+                  <button type="button" onClick={handleFilterCycle}>
+                    <Search size={14} />
+                    {filterLabel(taskFilter, t)}
+                  </button>
+                  <button type="button" aria-label={t("actions.openSettings")} onClick={() => handleNavSelect("settings")}>
+                    <Settings size={14} />
+                  </button>
+                </div>
               </div>
-              <p>已检测 {source.changeCount} 个变更</p>
-              <progress max="100" value={100} />
+
+              {error ? <div className="empty-state error">{error}</div> : null}
+              {!error ? (
+                <WorkbenchBody
+                  activeNav={activeNav}
+                  activeTab={activeTopTab}
+                  snapshot={snapshot}
+                  tasks={tasks}
+                  filteredTasks={filteredTasks}
+                  activeSourceId={activeSourceId}
+                  taskFilter={taskFilter}
+                  providers={providers}
+                  theme={theme}
+                  totalProgress={totalProgress}
+                  completedCount={completedCount}
+                  pendingCount={pendingCount}
+                  selectedTaskId={selectedTask?.id ?? null}
+                  t={t}
+                  onOpenSources={() => handleTopTabSelect("sources")}
+                  onOpenTasks={() => handleTopTabSelect("board")}
+                  onSelectSource={handleSourceSelect}
+                  onSelectTask={setSelectedTaskId}
+                  onOpenRun={(taskId) => {
+                    setSelectedTaskId(taskId);
+                    setActiveInspectorTab("run");
+                  }}
+                  onOpenReview={(taskId) => {
+                    setSelectedTaskId(taskId);
+                    setActiveInspectorTab("review");
+                  }}
+                  onOpenDecision={() => setActiveInspectorTab("decision")}
+                  onToggleTheme={handleThemeToggle}
+                  onRefresh={handleRefresh}
+                />
+              ) : null}
+            </section>
+
+            <Inspector
+              task={selectedTask}
+              t={t}
+              completedCount={completedCount}
+              pendingCount={pendingCount}
+              activeTab={activeInspectorTab}
+              actionOutput={actionOutput}
+              onTabChange={setActiveInspectorTab}
+              onPreviewWorktree={() => handlePreviewWorktree(selectedTask)}
+              onCreatePr={() => handleCreatePr(selectedTask)}
+            />
+          </div>
+
+          <footer className="execution-strip">
+            <div className="status-summary">
+              <strong>{t("footer.status")}</strong>
+              <div>
+                <span>
+                  {tasks.length}
+                  <small>tasks</small>
+                </span>
+                <span>
+                  {completedCount}
+                  <small>{t("status.approved")}</small>
+                </span>
+                <span>
+                  {pendingCount}
+                  <small>待执行</small>
+                </span>
+              </div>
+              <progress max="100" value={totalProgress} />
               <small>
-                真实来源 · {source.type}
+                {t("footer.overall")} {totalProgress}%
               </small>
             </div>
-          ))}
-          <div className="gate-box">
-            <LockKeyhole size={30} />
-            <div>
-              <strong>{t("inspector.humanGate")}</strong>
-              <span>{t("inspector.gateHint")}</span>
+            {(snapshot?.sources ?? []).slice(0, 3).map((source) => (
+              <div className="mini-run tone-cyan" key={source.id}>
+                <div>
+                  <strong>{source.label}</strong>
+                  <span>{source.root}</span>
+                </div>
+                <p>已检测 {source.changeCount} 个变更</p>
+                <progress max="100" value={100} />
+                <small>
+                  真实来源 · {source.type}
+                </small>
+              </div>
+            ))}
+            <div className="gate-box">
+              <LockKeyhole size={30} />
+              <div>
+                <strong>{t("inspector.humanGate")}</strong>
+                <span>{t("inspector.gateHint")}</span>
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </main>
     </div>
     </RadixTooltip.Provider>
