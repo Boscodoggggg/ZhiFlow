@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import * as RadixSwitch from "@radix-ui/react-switch";
+import * as RadixTabs from "@radix-ui/react-tabs";
+import * as RadixTooltip from "@radix-ui/react-tooltip";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Bell,
   Boxes,
@@ -13,7 +16,9 @@ import {
   LayoutDashboard,
   LockKeyhole,
   Moon,
+  Network,
   RefreshCw,
+  Rocket,
   Search,
   Settings,
   ShieldCheck,
@@ -160,6 +165,34 @@ function nextFilter(filter: TaskFilter): TaskFilter {
   if (filter === "all") return "todo";
   if (filter === "todo") return "done";
   return "all";
+}
+
+function IconTooltipButton({
+  label,
+  className = "icon-button",
+  onClick,
+  children,
+}: {
+  label: string;
+  className?: string;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <RadixTooltip.Root>
+      <RadixTooltip.Trigger asChild>
+        <button className={className} type="button" aria-label={label} onClick={onClick}>
+          {children}
+        </button>
+      </RadixTooltip.Trigger>
+      <RadixTooltip.Portal>
+        <RadixTooltip.Content className="tooltip-content" sideOffset={8}>
+          {label}
+          <RadixTooltip.Arrow className="tooltip-arrow" />
+        </RadixTooltip.Content>
+      </RadixTooltip.Portal>
+    </RadixTooltip.Root>
+  );
 }
 
 function safeTaskSlug(taskId: string) {
@@ -327,7 +360,8 @@ export function App() {
   const currentPanelSubtitle = panelSubtitle(activeNav, activeTopTab, t, tasks.length);
 
   return (
-    <div className="app-shell">
+    <RadixTooltip.Provider delayDuration={240}>
+      <div className="app-shell">
       <aside className="sidebar" aria-label="ZhiFlow navigation">
         <div className="brand">
           <div className="brand-mark">
@@ -406,20 +440,15 @@ export function App() {
         <header className="topbar">
           <div>
             <h1>{snapshot?.repo.name ? `${snapshot.repo.name} · 真实项目扫描` : "正在读取项目"}</h1>
-            <div className="tabs" role="tablist" aria-label="工作区视图">
-              {topTabs.map(({ tab, key }) => (
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTopTab === tab}
-                  className={activeTopTab === tab ? "active" : ""}
-                  key={tab}
-                  onClick={() => handleTopTabSelect(tab)}
-                >
-                  {t(key)}
-                </button>
-              ))}
-            </div>
+            <RadixTabs.Root value={activeTopTab} onValueChange={(value) => handleTopTabSelect(value as TopTab)}>
+              <RadixTabs.List className="tabs" aria-label="工作区视图">
+                {topTabs.map(({ tab, key }) => (
+                  <RadixTabs.Trigger className={activeTopTab === tab ? "active" : ""} key={tab} value={tab}>
+                    {t(key)}
+                  </RadixTabs.Trigger>
+                ))}
+              </RadixTabs.List>
+            </RadixTabs.Root>
           </div>
 
           <div className="top-actions">
@@ -447,21 +476,24 @@ export function App() {
                 {t("app.english")}
               </button>
             </div>
-            <button className="icon-button theme-button" type="button" aria-label={t("theme.toggle")} onClick={handleThemeToggle}>
-              {theme === "dark" ? <Moon size={17} /> : <Sun size={17} />}
+            <div className="theme-control">
+              <span className="theme-control-icon">{theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}</span>
+              <RadixSwitch.Root
+                className="theme-switch"
+                checked={theme === "dark"}
+                aria-label={t("theme.toggle")}
+                onCheckedChange={() => handleThemeToggle()}
+              >
+                <RadixSwitch.Thumb className="theme-switch-thumb" />
+              </RadixSwitch.Root>
               <span>{theme === "dark" ? t("theme.dark") : t("theme.light")}</span>
-            </button>
-            <button
-              className="icon-button"
-              type="button"
-              aria-label={t("actions.notifications")}
-              onClick={() => setNotice(t("notice.noNotifications"))}
-            >
+            </div>
+            <IconTooltipButton label={t("actions.notifications")} onClick={() => setNotice(t("notice.noNotifications"))}>
               <Bell size={18} />
-            </button>
-            <button className="icon-button" type="button" aria-label={t("actions.openSettings")} onClick={() => handleNavSelect("settings")}>
+            </IconTooltipButton>
+            <IconTooltipButton label={t("actions.openSettings")} onClick={() => handleNavSelect("settings")}>
               <Settings size={18} />
-            </button>
+            </IconTooltipButton>
           </div>
         </header>
 
@@ -486,6 +518,8 @@ export function App() {
             </span>
           </div>
         </section>
+
+        <PipelineRail snapshot={snapshot} providers={providers} completedCount={completedCount} pendingCount={pendingCount} t={t} />
 
         <SourceStrip snapshot={snapshot} error={error} />
 
@@ -611,6 +645,7 @@ export function App() {
         </footer>
       </main>
     </div>
+    </RadixTooltip.Provider>
   );
 }
 
@@ -752,6 +787,70 @@ function TaskBoard({
         );
       })}
     </div>
+  );
+}
+
+function PipelineRail({
+  snapshot,
+  providers,
+  completedCount,
+  pendingCount,
+  t,
+}: {
+  snapshot: ProjectApiSnapshot | null;
+  providers: AgentProvider[];
+  completedCount: number;
+  pendingCount: number;
+  t: ReturnType<typeof createTranslator>;
+}) {
+  const availableProviders = providers.filter((provider) => provider.available);
+  const stages = [
+    {
+      label: t("pipeline.spec"),
+      value: `${snapshot?.sources.length ?? 0}`,
+      detail: t("pipeline.specDetail"),
+      icon: ClipboardList,
+      tone: "cyan",
+    },
+    {
+      label: t("pipeline.agent"),
+      value: `${availableProviders.length}`,
+      detail: availableProviders.map((provider) => provider.label).join(" / ") || t("pipeline.agentWaiting"),
+      icon: Network,
+      tone: "green",
+    },
+    {
+      label: t("pipeline.review"),
+      value: `${completedCount}`,
+      detail: `${pendingCount} ${t("pipeline.pendingGates")}`,
+      icon: ShieldCheck,
+      tone: "amber",
+    },
+    {
+      label: t("pipeline.pr"),
+      value: snapshot?.repo.isGit ? t("pipeline.armed") : t("pipeline.local"),
+      detail: snapshot?.repo.branch ?? "no branch",
+      icon: Rocket,
+      tone: "blue",
+    },
+  ];
+
+  return (
+    <section className="pipeline-rail" aria-label="Spec to PR pipeline">
+      <div className="pipeline-spine" />
+      {stages.map(({ label, value, detail, icon: Icon, tone }) => (
+        <div className={`pipeline-stage stage-${tone}`} key={label}>
+          <span className="stage-icon">
+            <Icon size={17} />
+          </span>
+          <div>
+            <strong>{label}</strong>
+            <span>{detail}</span>
+          </div>
+          <em>{value}</em>
+        </div>
+      ))}
+    </section>
   );
 }
 
@@ -1053,10 +1152,16 @@ function SettingsPanel({
       <section className="settings-section">
         <strong>{t("settings.appearance")}</strong>
         <p>{theme === "dark" ? "当前是暗色主题，适合长时间编码。" : "当前是亮色主题，适合文档和白天审阅。"}</p>
-        <button className="muted-button" type="button" aria-label="切换界面主题" onClick={onToggleTheme}>
-          {theme === "dark" ? <Moon size={14} /> : <Sun size={14} />}
-          {theme === "dark" ? t("theme.dark") : t("theme.light")}
-        </button>
+        <div className="theme-setting-row">
+          <span className="theme-control-icon">{theme === "dark" ? <Moon size={14} /> : <Sun size={14} />}</span>
+          <div>
+            <strong>{theme === "dark" ? t("theme.dark") : t("theme.light")}</strong>
+            <small>{t("theme.toggle")}</small>
+          </div>
+          <RadixSwitch.Root className="theme-switch" checked={theme === "dark"} aria-label="切换界面主题" onCheckedChange={() => onToggleTheme()}>
+            <RadixSwitch.Thumb className="theme-switch-thumb" />
+          </RadixSwitch.Root>
+        </div>
       </section>
       <section className="settings-section">
         <strong>{t("settings.sdd")}</strong>
@@ -1127,13 +1232,15 @@ function Inspector({
   if (!task) {
     return (
       <aside className="inspector">
-        <div className="inspector-tabs" role="tablist" aria-label="任务详情">
-          {tabs.map(({ tab, key }) => (
-            <button type="button" className={activeTab === tab ? "active" : ""} key={tab} onClick={() => onTabChange(tab)}>
-              {t(key)}
-            </button>
-          ))}
-        </div>
+        <RadixTabs.Root value={activeTab} onValueChange={(value) => onTabChange(value as InspectorTab)}>
+          <RadixTabs.List className="inspector-tabs" aria-label="任务详情">
+            {tabs.map(({ tab, key }) => (
+              <RadixTabs.Trigger className={activeTab === tab ? "active" : ""} key={tab} value={tab}>
+                {t(key)}
+              </RadixTabs.Trigger>
+            ))}
+          </RadixTabs.List>
+        </RadixTabs.Root>
         <div className="empty-state compact">
           <h2>等待真实任务</h2>
           <p>扫描到 OpenSpec、Spec Kit 或 tasks.md 后，这里会展示执行上下文。</p>
@@ -1144,13 +1251,15 @@ function Inspector({
 
   return (
     <aside className="inspector">
-      <div className="inspector-tabs" role="tablist" aria-label="任务详情">
-        {tabs.map(({ tab, key }) => (
-          <button type="button" className={activeTab === tab ? "active" : ""} key={tab} onClick={() => onTabChange(tab)}>
-            {t(key)}
-          </button>
-        ))}
-      </div>
+      <RadixTabs.Root value={activeTab} onValueChange={(value) => onTabChange(value as InspectorTab)}>
+        <RadixTabs.List className="inspector-tabs" aria-label="任务详情">
+          {tabs.map(({ tab, key }) => (
+            <RadixTabs.Trigger className={activeTab === tab ? "active" : ""} key={tab} value={tab}>
+              {t(key)}
+            </RadixTabs.Trigger>
+          ))}
+        </RadixTabs.List>
+      </RadixTabs.Root>
       <section className="task-detail">
         <div className="detail-title">
           <div>

@@ -14,6 +14,7 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+.impeccable.md
 
 canvas/cowart-selection.json
 canvas/cowart-view-state.json

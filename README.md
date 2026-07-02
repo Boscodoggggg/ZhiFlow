@@ -28,6 +28,7 @@ ZhiFlow Lite is the local-first control plane for that loop.
 - **Multi-agent ready**: designed for implementer agents, reviewer agents, and parallel task lanes
 - **Provider aware**: detects local Codex, Claude Code, Gemini CLI, OpenCode, and Cursor CLIs
 - **Human gate first**: PR, push, and final decisions are designed to require explicit human approval
+- **Open-source UI primitives**: Radix UI tabs, switches, and tooltips with a custom local workbench skin
 - **Bilingual UI**: Simplified Chinese by default, English supported
 - **Theme support**: polished dark and light modes
 

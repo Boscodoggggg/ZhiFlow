@@ -80,7 +80,7 @@ describe("App interactions", () => {
     fireEvent.click(screen.getByRole("button", { name: "设置" }));
     expect(screen.getByRole("heading", { name: "设置" })).toBeTruthy();
 
-    fireEvent.click(screen.getByRole("button", { name: "切换主题" }));
+    fireEvent.click(screen.getByRole("switch", { name: "切换主题" }));
 
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
     expect(storage.getItem("zhiflow-theme")).toBe("light");
