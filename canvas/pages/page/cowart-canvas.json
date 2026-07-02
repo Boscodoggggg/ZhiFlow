@@ -1,0 +1,147 @@
+{
+  "schema": {
+    "schemaVersion": 2,
+    "sequences": {
+      "com.tldraw.store": 5,
+      "com.tldraw.asset": 1,
+      "com.tldraw.camera": 1,
+      "com.tldraw.document": 2,
+      "com.tldraw.instance": 26,
+      "com.tldraw.instance_page_state": 5,
+      "com.tldraw.page": 1,
+      "com.tldraw.instance_presence": 6,
+      "com.tldraw.pointer": 1,
+      "com.tldraw.shape": 4,
+      "com.tldraw.user": 1,
+      "com.tldraw.asset.image": 6,
+      "com.tldraw.asset.video": 5,
+      "com.tldraw.asset.bookmark": 2,
+      "com.tldraw.shape.arrow": 8,
+      "com.tldraw.shape.bookmark": 2,
+      "com.tldraw.shape.draw": 5,
+      "com.tldraw.shape.embed": 4,
+      "com.tldraw.shape.frame": 1,
+      "com.tldraw.shape.geo": 11,
+      "com.tldraw.shape.group": 0,
+      "com.tldraw.shape.highlight": 4,
+      "com.tldraw.shape.image": 5,
+      "com.tldraw.shape.line": 5,
+      "com.tldraw.shape.note": 13,
+      "com.tldraw.shape.text": 4,
+      "com.tldraw.shape.video": 4,
+      "com.tldraw.binding.arrow": 1
+    }
+  },
+  "store": {
+    "document:document": {
+      "gridSize": 10,
+      "name": "",
+      "meta": {},
+      "id": "document:document",
+      "typeName": "document"
+    },
+    "page:page": {
+      "meta": {},
+      "id": "page:page",
+      "name": "Page 1",
+      "index": "a1",
+      "typeName": "page"
+    },
+    "user:ip1iBLtZeFEr8W_sbh0_n": {
+      "name": "",
+      "color": "#F04F88",
+      "imageUrl": "",
+      "meta": {},
+      "id": "user:ip1iBLtZeFEr8W_sbh0_n",
+      "typeName": "user"
+    },
+    "shape:Q3c-iiiRy3A6k1syxNNqS": {
+      "x": 80,
+      "y": 48,
+      "rotation": 0,
+      "isLocked": false,
+      "opacity": 1,
+      "meta": {},
+      "id": "shape:Q3c-iiiRy3A6k1syxNNqS",
+      "type": "text",
+      "props": {
+        "color": "black",
+        "size": "m",
+        "w": 560,
+        "font": "draw",
+        "textAlign": "start",
+        "autoSize": true,
+        "scale": 1,
+        "richText": {
+          "type": "doc",
+          "attrs": {
+            "dir": "auto"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "dir": "auto"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "智流 Lite WebUI 中文原型（默认中文，支持国际化）"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "parentId": "page:page",
+      "index": "a1yZM",
+      "typeName": "shape"
+    },
+    "asset:zhiflow-lite-webui-prototype-zh-cn": {
+      "id": "asset:zhiflow-lite-webui-prototype-zh-cn",
+      "typeName": "asset",
+      "type": "image",
+      "props": {
+        "name": "zhiflow-lite-webui-prototype-zh-cn.png",
+        "src": "/page-assets/page/zhiflow-lite-webui-prototype-zh-cn.png",
+        "w": 1586,
+        "h": 992,
+        "fileSize": 1425431,
+        "mimeType": "image/png",
+        "isAnimated": false
+      },
+      "meta": {}
+    },
+    "shape:zhiflow-lite-webui-prototype-zh-cn": {
+      "x": 80,
+      "y": 112,
+      "rotation": 0,
+      "isLocked": false,
+      "opacity": 1,
+      "meta": {
+        "source": "codex",
+        "kind": "webui-prototype",
+        "project": "ZhiFlow Lite",
+        "locale": "zh-CN",
+        "i18n": "zh-CN default, en-US supported",
+        "description": "Chinese default UI with i18n switch for parallel AI coding agents dashboard"
+      },
+      "id": "shape:zhiflow-lite-webui-prototype-zh-cn",
+      "type": "image",
+      "props": {
+        "w": 1200,
+        "h": 751,
+        "assetId": "asset:zhiflow-lite-webui-prototype-zh-cn",
+        "playing": true,
+        "url": "",
+        "crop": null,
+        "flipX": false,
+        "flipY": false,
+        "altText": "智流 Lite 中文多 Agent Spec-to-PR WebUI 原型图"
+      },
+      "parentId": "page:page",
+      "index": "a2",
+      "typeName": "shape"
+    }
+  }
+}
